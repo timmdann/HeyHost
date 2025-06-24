@@ -1,23 +1,23 @@
 import dotenv from 'dotenv';
 
-// Set the NODE_ENV to 'development' by default
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+// Загружаем .env только в локальной среде
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
 
-const envFound = dotenv.config();
-if (envFound.error) {
-  // This error should crash whole process
-
-  throw new Error("⚠️  Couldn't find .env file  ⚠️");
+// Убедимся, что важные переменные присутствуют
+if (!process.env.JWT_SECRET || !process.env.MONGODB_URI) {
+  throw new Error("Missing required environment variables: JWT_SECRET or MONGODB_URI");
 }
 
 export default {
   /**
    * Your favorite port
    */
-  port: parseInt(process.env.PORT, 10),
+  port: parseInt(process.env.PORT || '3000', 10),
 
   /**
-   * That long string from mlab
+   * That long string from MongoDB
    */
   databaseURL: process.env.MONGODB_URI,
 
@@ -25,22 +25,22 @@ export default {
    * Your secret sauce
    */
   jwtSecret: process.env.JWT_SECRET,
-  jwtAlgorithm: process.env.JWT_ALGO,
+  jwtAlgorithm: process.env.JWT_ALGO || 'HS256',
 
   /**
    * Used by winston logger
    */
   logs: {
-    level: process.env.LOG_LEVEL || 'silly',
+    level: process.env.LOG_LEVEL || 'info',
   },
 
   /**
    * Agenda.js stuff
    */
   agenda: {
-    dbCollection: process.env.AGENDA_DB_COLLECTION,
-    pooltime: process.env.AGENDA_POOL_TIME,
-    concurrency: parseInt(process.env.AGENDA_CONCURRENCY, 10),
+    dbCollection: process.env.AGENDA_DB_COLLECTION || 'jobs',
+    pooltime: process.env.AGENDA_POOL_TIME || '5 seconds',
+    concurrency: parseInt(process.env.AGENDA_CONCURRENCY || '5', 10),
   },
 
   /**
@@ -48,20 +48,22 @@ export default {
    */
   agendash: {
     user: 'agendash',
-    password: '123456'
+    password: '123456',
   },
+
   /**
    * API configs
    */
   api: {
     prefix: '/api',
   },
+
   /**
    * Mailgun email credentials
    */
   emails: {
     apiKey: process.env.MAILGUN_API_KEY,
     apiUsername: process.env.MAILGUN_USERNAME,
-    domain: process.env.MAILGUN_DOMAIN
+    domain: process.env.MAILGUN_DOMAIN,
   }
 };
