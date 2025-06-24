@@ -4,16 +4,16 @@
   "description": "Bulletproof node.js",
   "main": "src/app.ts",
   "scripts": {
-  "start": "node build/app.js",
-  "build": "tsc",
-  "dev": "ts-node src/app.ts",
-  "inspect": "nodemon --inspect src/app.ts",
-  "test": "jest",
-  "lint": "npm run lint:js",
-  "lint:eslint": "eslint --ignore-path .gitignore --ext .ts",
-  "lint:js": "npm run lint:eslint src/",
-  "lint:fix": "npm run lint:js -- --fix"
-},
+    "start": "node -r module-alias/register build/app.js",
+    "build": "tsc",
+    "dev": "ts-node -r tsconfig-paths/register src/app.ts",
+    "inspect": "nodemon --inspect src/app.ts",
+    "test": "jest",
+    "lint": "npm run lint:js",
+    "lint:eslint": "eslint --ignore-path .gitignore --ext .ts",
+    "lint:js": "npm run lint:eslint src/",
+    "lint:fix": "npm run lint:js -- --fix"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/santiq/bulletproof-nodejs.git"
@@ -51,6 +51,7 @@
     "lodash": "^4.17.21",
     "mailgun.js": "3.3.0",
     "method-override": "^3.0.0",
+    "module-alias": "^2.2.3",
     "moment": "^2.29.0",
     "moment-timezone": "^0.5.31",
     "mongodb": "^6.17.0",
@@ -80,6 +81,17 @@
     "tsconfig-paths": "^3.15.0",
     "tslint": "^5.20.1",
     "typescript": "^4.0.3"
+  },
+  "_moduleAliases": {
+    "@loaders": "build/loaders",
+    "@models": "build/models",
+    "@services": "build/services",
+    "@api": "build/api",
+    "@decorators": "build/decorators",
+    "@interfaces": "build/interfaces",
+    "@subscribers": "build/subscribers",
+    "@jobs": "build/jobs",
+    "@types": "build/types"
   },
   "bugs": {
     "url": "https://github.com/santiq/bulletproof-nodejs/issues"
