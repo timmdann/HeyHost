@@ -22,7 +22,7 @@ export function Dashboard() {
       }
 
       try {
-        const res = await fetch('https://heyhost-backend.onrender.com/api/users/me', {
+        const res = await fetch('https://heyhost-backend.onrender.com/users/me', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
