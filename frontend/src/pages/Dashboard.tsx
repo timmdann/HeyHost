@@ -1,32 +1,59 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
+
+interface User {
+  firstName: string
+  lastName: string
+  email: string
+}
 
 export function Dashboard() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      window.location.href = '/login';
-      return;
+    const fetchUser = async () => {
+      const token = localStorage.getItem('token')
+
+      if (!token) {
+        setError('No authorization token')
+        setLoading(false)
+        return
+      }
+
+      try {
+        const res = await fetch('http://localhost:3000/api/users/me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (!res.ok) throw new Error('Data loading error')
+
+        const data = await res.json()
+        setUser(data)
+      } catch (err) {
+        setError('Error loading user')
+      } finally {
+        setLoading(false)
+      }
     }
 
-    fetch('http://localhost:3000/users/me', {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(res => res.json())
-      .then(data => setUser(data.user))
-      .catch(() => {
-        localStorage.removeItem('token');
-        window.location.href = '/login';
-      });
-  }, []);
+    fetchUser()
+  }, [])
+
+  if (loading) return <div className="p-4">Loading...</div>
+  if (error) return <div className="p-4 text-red-500">{error}</div>
+  if (!user) return <div className="p-4">User not found</div>
 
   return (
-    <div className="p-10">
-      <h1 className="text-2xl font-bold">👋 Welcome to Dashboard</h1>
-      {user && (
-        <p className="mt-4">You are logged in as: <strong>{user.email}</strong></p>
-      )}
+    <div className="p-8 max-w-md mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Welcome, {user.firstName}!</h1>
+      <div className="space-y-2 text-lg">
+        <p><strong>Name:</strong> {user.firstName}</p>
+        <p><strong>Last name:</strong> {user.lastName}</p>
+        <p><strong>Email:</strong> {user.email}</p>
+      </div>
     </div>
-  );
+  )
 }
