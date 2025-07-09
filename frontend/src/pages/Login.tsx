@@ -6,12 +6,12 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
-  CardAction,
+  CardFooter
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
+import { Link } from "react-router-dom"
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -31,44 +31,44 @@ export function Login() {
       })
 
       if (res.status === 401) {
-        setError('Неверный email или пароль')
+        setError('Incorrect email or password')
         return
       }
 
-      if (!res.ok) throw new Error('Ошибка сервера')
+      if (!res.ok) throw new Error('Server error')
 
       const data = await res.json()
       localStorage.setItem('token', data.token)
       navigate('/dashboard')
     } catch (err) {
       console.error('Login error:', err)
-      setError('Ошибка входа')
+      setError('Login error')
     }
   }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-white">
-      <Card className="w-full max-w-sm bg-neutral-100 border border-neutral-200 shadow-md">
+      <Card className="w-full max-w-sm border border-neutral-200 shadow-md">
         <CardHeader>
-          <div className="flex justify-between items-start">
+          <div>
             <div>
-              <CardTitle className="text-neutral-950 text-left mb-2">Login to your account</CardTitle>
-              <CardDescription className="text-neutral-700 text-left">
+              <CardTitle>Login to your account</CardTitle>
+              <CardDescription>
                 Enter your email below to login to your account
               </CardDescription>
             </div>
-            <CardAction>
-              <Button variant="link" onClick={() => navigate('/register')}>
-                Sign Up
-              </Button>
-            </CardAction>
+  
+
+
+
+
           </div>
         </CardHeader>
 
         <CardContent>
           <form onSubmit={handleLogin} className="flex flex-col gap-6">
             <div className="grid gap-2">
-              <Label htmlFor="email" className="text-neutral-700">Email</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -76,14 +76,15 @@ export function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="text-black"
               />
             </div>
             <div className="grid gap-2">
               <div className="flex items-center">
-                <Label htmlFor="password" className="text-neutral-700">Password</Label>
+                <Label htmlFor="password">Password</Label>
                 <a
                   href="#"
-                  className="ml-auto text-sm text-white hover:underline"
+                  className="ml-auto inline-block text-sm text-muted-foreground hover:underline"
                 >
                   Forgot your password?
                 </a>
@@ -96,16 +97,25 @@ export function Login() {
                 required
               />
             </div>
-
             {error && <p className="text-sm text-red-500">{error}</p>}
+            <Button type="submit" className="w-full">
+              Login
+            </Button>
           </form>
         </CardContent>
 
-        <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full" form="login-form">
-            Login
-          </Button>
+        <CardFooter className="flex justify-center">
+          <CardDescription className="text-center text-sm text-muted-foreground">
+            If you don't have an account yet,{" "}
+            <Link
+              to="/register"
+              className="text-primary underline underline-offset-4 hover:text-primary/80 transition-colors"
+            >
+              Sign Up
+            </Link>
+          </CardDescription>
         </CardFooter>
+
       </Card>
     </div>
   )
