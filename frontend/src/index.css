@@ -178,6 +178,14 @@ button:focus-visible {
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #000 !important;
+  transition: background-color 9999s ease-out;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
