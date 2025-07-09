@@ -2,6 +2,8 @@ import 'reflect-metadata'; // We need this in order to use @Decorators
 
 import config from './config';
 
+import cors from 'cors';
+
 import express from 'express';
 
 import Logger from './loaders/logger';
@@ -17,7 +19,7 @@ async function startServer() {
    * Well, at least in node 10 without babel and at the time of writing
    * So we are using good old require.
    **/
-  await require('./loaders').default({ expressApp: app });
+  
 
   app.listen(config.port, () => {
     Logger.info(`
@@ -30,11 +32,16 @@ async function startServer() {
     process.exit(1);
   });
 
-  app.use(express.static(path.join(__dirname, '../public')));
+  app.use(cors({
+      origin: 'https://heyhost-frontend.onrender.com',
+      credentials: true,
+    }));
 
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/index.html'));
   });
+
+  await require('./loaders').default({ expressApp: app });
 
 }
 
