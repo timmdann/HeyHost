@@ -32,7 +32,7 @@ export function Register() {
     }
 
     try {
-      const res = await fetch('https://heyhost-backend.onrender.com/users/register', {
+      const res = await fetch('https://heyhost-backend.onrender.com/api/users/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
