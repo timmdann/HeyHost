@@ -27,6 +27,11 @@ export default ({ app }: { app: express.Application }) => {
   credentials: true,
 }))
 
+app.options('*', cors({
+  origin: 'https://heyhost-frontend.onrender.com',
+  credentials: true,
+}));
+
   // Some sauce that always add since 2014
   // "Lets you use HTTP verbs such as PUT or DELETE in places where the client doesn't support it."
   // Maybe not needed anymore ?
