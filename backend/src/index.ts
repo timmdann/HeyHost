@@ -16,9 +16,6 @@ const corsOptions: CorsOptions | undefined = frontendOrigin
   ? { origin: frontendOrigin, credentials: false }
   : undefined;
 app.use(cors(corsOptions));
-// Ensure preflight OPTIONS requests are handled for all routes.
-// Use '/*' pattern instead of '*' to be compatible with path-to-regexp.
-app.options("/*", cors(corsOptions));
 app.use(express.json());
 
 app.get("/api/health", (_req, res) => {
