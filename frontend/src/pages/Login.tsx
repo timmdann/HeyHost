@@ -30,8 +30,15 @@ export default function LoginPage(): JSX.Element {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Login failed");
+      let data: any = null;
+      try {
+        data = await res.json();
+      } catch (parseErr) {
+        const text = await res.text().catch(() => "<no body>");
+        throw new Error(`HTTP ${res.status}: ${String(text).slice(0, 300)}`);
+      }
+      if (!res.ok)
+        throw new Error(data?.error || `Login failed (status ${res.status})`);
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       location.hash = "#/home";
@@ -95,6 +102,9 @@ export default function LoginPage(): JSX.Element {
               {error ? (
                 <div style={{ color: "#b91c1c", marginTop: 8 }}>{error}</div>
               ) : null}
+              <div style={{ marginTop: 8, fontSize: 12, color: "#6b7280" }}>
+                API: {API_BASE}
+              </div>
             </CardContent>
 
             <CardFooter>
